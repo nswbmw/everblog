@@ -1,0 +1,47 @@
+{
+  "name": "everblog",
+  "version": "0.1.0",
+  "description": "write blogs in your evernote.",
+  "main": "lib/everblog",
+  "bin": {
+    "everblog": "bin/everblog"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha test/*"
+  },
+  "keywords": [
+    "evernote",
+    "blog"
+  ],
+  "dependencies": {
+    "bluebird": "^3.0.5",
+    "chalk": "^1.1.1",
+    "co": "^4.6.0",
+    "commander": "^2.9.0",
+    "debug": "^2.2.0",
+    "enml2text": "^0.1.1",
+    "entities": "^1.1.1",
+    "evernote": "^1.25.82",
+    "js-yaml": "^3.4.6",
+    "lodash": "^3.10.1",
+    "open": "0.0.5"
+  },
+  "author": {
+    "name": "nswbmw",
+    "email": "nswbmw1992@gmail.com"
+  },
+  "engines": {
+    "node": ">= 4"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/everblogjs/everblog.git"
+  },
+  "bugs": {
+    "url": "https://github.com/everblogjs/everblog/issues"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.4"
+  }
+}

@@ -1,0 +1,118 @@
+#!/usr/bin/env node
+
+'use strict';
+ 
+const fs = require('fs')
+const path = require('path')
+
+const co = require('co')
+const _ = require('lodash')
+const open = require('open')
+const chalk = require('chalk')
+const yaml = require('js-yaml')
+const program = require('commander')
+
+const utils = require('../lib/utils')
+const pkg = require('../package.json')
+const Everblog = require('../lib/everblog')
+
+const configPath = path.join(__dirname, '..', '_config.yml')
+const log = str => {
+  console.log()
+  console.log('  ' + chalk.green(str).split('\n').join('\n  '))
+  console.log()
+};
+const error = str => {
+  console.log()
+  console.log('  ' + chalk.red(str).split('\n').join('\n  '))
+  console.log()
+};
+
+program
+  .version(pkg.version)
+  .usage('[command]')
+
+program
+  .command('config [key] [value]')
+  .description('set config or list config')
+  .action(configBlog)
+
+program
+  .command('build')
+  .description('build blog')
+  .action(buildBlog)
+
+program
+  .command('start')
+  .description('build and start blog')
+  .action(startBlog)
+
+program.parse(process.argv);
+
+if (process.argv.length === 2) {
+  program.outputHelp();
+}
+
+function configBlog(key, value) {
+  let configStr = fs.readFileSync(configPath)
+  let config = yaml.safeLoad(configStr)
+
+  if (!key && !value) {
+    log(configStr)
+    return
+  }
+
+  if (key && value) {
+    config[key] = value
+    configStr = yaml.safeDump(config)
+    fs.writeFileSync(configPath, configStr)
+    log(configStr)
+    return
+  }
+
+  error('Config key or value must be exist!');
+}
+
+function buildBlog() {
+  const dir = process.cwd()
+  const configStr = fs.readFileSync(configPath)
+  const config = yaml.safeLoad(configStr)
+
+  if (!config.token || !config.noteStoreUrl || !config.notebook) {
+    error('Configuration is not complete!')
+    log(configStr)
+    return Promise.reject()
+  }
+
+  let buildProcessor
+  try {
+    buildProcessor = require(dir)
+  } catch (e) {
+    error('Cannot find file ' + dir + '!')
+    return Promise.reject()
+  }
+
+  return co(function* () {
+    const everblog = new Everblog(config)
+    const notes = yield everblog.findNotes()
+    const data = utils.formatNotes(notes)
+    
+    return yield buildProcessor(data)
+  }).catch(e => {
+    error(e)
+    return Promise.reject()
+  })
+}
+
+function startBlog() {
+  buildBlog().then(distPath => {
+    distPath = distPath || path.join(process.cwd(), 'index.html')
+    if (!fs.existsSync(distPath)) {
+      return Promise.reject(distPath + ' not exist!')
+    }
+    open(distPath)
+  }).catch(e => {
+    if (e) error(e)
+  })
+}
+
