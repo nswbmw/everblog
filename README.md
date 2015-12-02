@@ -39,6 +39,7 @@ Finally push your github-pages.
 ### Themes
 
 - [everblog-theme-spa](https://github.com/everblogjs/everblog-theme-spa)
+- [everblog-theme-koa](https://github.com/everblogjs/everblog-theme-koa)
 
 ### Roadmap
 
