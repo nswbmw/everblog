@@ -1,5 +1,11 @@
 ## EverBlog
 
+[![NPM version][npm-image]][npm-url]
+[![Build status][travis-image]][travis-url]
+[![Dependency Status][david-image]][david-url]
+[![License][license-image]][license-url]
+[![Downloads][downloads-image]][downloads-url]
+
 EverBlog = write blogs in your evernote.
 
 ### How to use
@@ -58,3 +64,14 @@ npm test
 ### License
 
 MIT
+
+[npm-image]: https://img.shields.io/npm/v/everblog.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/everblog
+[travis-image]: https://img.shields.io/travis/everblogjs/everblog.svg?style=flat-square
+[travis-url]: https://travis-ci.org/everblogjs/everblog
+[david-image]: http://img.shields.io/david/everblogjs/everblog.svg?style=flat-square
+[david-url]: https://david-dm.org/everblogjs/everblog
+[license-image]: http://img.shields.io/npm/l/everblog.svg?style=flat-square
+[license-url]: LICENSE
+[downloads-image]: http://img.shields.io/npm/dm/everblog.svg?style=flat-square
+[downloads-url]: https://npmjs.org/package/everblog
