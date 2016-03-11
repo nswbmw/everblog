@@ -95,11 +95,12 @@ function buildBlog() {
   return co(function* () {
     const everblog = new Everblog(config)
     const notes = yield everblog.findNotes()
-    const data = utils.formatNotes(notes)
+    const webApiUrlPrefix = yield everblog.getWebApiUrlPrefix()
+    const data = utils.formatNotes(notes, webApiUrlPrefix)
     
     return yield buildProcessor(data)
   }).catch(e => {
-    error(e)
+    error(e.stack)
     return Promise.reject()
   })
 }
@@ -112,7 +113,7 @@ function startBlog() {
     }
     open(distPath)
   }).catch(e => {
-    if (e) error(e)
+    if (e) error(e.stack)
   })
 }
 
