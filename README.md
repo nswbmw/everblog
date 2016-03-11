@@ -12,9 +12,7 @@ EverBlog = write blogs in your evernote.
 
 ```
 $ npm i everblog -g
-$ everblog config token xxx
-$ everblog config noteStoreUrl xxx
-$ everblog config notebook myblog
+$ everblog config
 $ git clone https://github.com/everblogjs/everblog-theme-spa
 $ cd everblog-theme-spa && npm i
 
@@ -36,7 +34,6 @@ Finally push your github-pages.
 `token` and `noteStoreUrl` get from:
 
 - https://www.evernote.com/api/DeveloperToken.action
-- https://app.yinxiang.com/api/DeveloperToken.action
 
 ### Adaptors
 
@@ -49,8 +46,9 @@ Finally push your github-pages.
 
 ### Roadmap
 
-- jekyll adaptor
-- hexo adaptor
+- Ghost adaptor
+- Jekyll adaptor
+- Hexo adaptor
 - Angular adaptor
 - React adaptor
 - ...
