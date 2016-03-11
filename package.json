@@ -1,6 +1,6 @@
 {
   "name": "everblog",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "write blogs in your evernote.",
   "main": "lib/everblog",
   "bin": {
@@ -22,6 +22,7 @@
     "enml2text": "^0.1.1",
     "entities": "^1.1.1",
     "evernote": "^1.25.82",
+    "home": "^1.0.1",
     "js-yaml": "^3.4.6",
     "lodash": "^3.10.1",
     "open": "0.0.5"

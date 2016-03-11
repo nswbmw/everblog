@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 
 const co = require('co')
+const home = require('home')()
 const _ = require('lodash')
 const open = require('open')
 const chalk = require('chalk')
@@ -16,7 +17,7 @@ const utils = require('../lib/utils')
 const pkg = require('../package.json')
 const Everblog = require('../lib/everblog')
 
-const configPath = path.join(__dirname, '..', '_config.yml')
+const configPath = path.join(home, '.everblogrc')
 const log = str => {
   console.log()
   console.log('  ' + chalk.green(str).split('\n').join('\n  '))
@@ -33,8 +34,8 @@ program
   .usage('[command]')
 
 program
-  .command('config [key] [value]')
-  .description('set config or list config')
+  .command('config')
+  .description('list config')
   .action(configBlog)
 
 program
@@ -53,24 +54,12 @@ if (process.argv.length === 2) {
   program.outputHelp();
 }
 
-function configBlog(key, value) {
-  let configStr = fs.readFileSync(configPath)
-  let config = yaml.safeLoad(configStr)
-
-  if (!key && !value) {
-    log(configStr)
-    return
+function configBlog() {
+  try {
+    log(fs.readFileSync(configPath))
+  } catch (e) {
+    log('write to ~/.everblogrc:\n\n  token: "xxx"\n  noteStoreUrl: "xxx"\n  notebook: "xxx"')
   }
-
-  if (key && value) {
-    config[key] = value
-    configStr = yaml.safeDump(config)
-    fs.writeFileSync(configPath, configStr)
-    log(configStr)
-    return
-  }
-
-  error('Config key or value must be exist!');
 }
 
 function buildBlog() {
