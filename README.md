@@ -37,10 +37,12 @@ Finally push your github-pages.
 
 ### Adaptors
 
+- [everblog-adaptor-hexo](https://github.com/everblogjs/everblog-adaptor-hexo)
 - [everblog-adaptor-spa](https://github.com/everblogjs/everblog-adaptor-spa)
 
 ### Themes
 
+- all hexo themes
 - [everblog-theme-spa](https://github.com/everblogjs/everblog-theme-spa)
 - [everblog-theme-koa](https://github.com/everblogjs/everblog-theme-koa)
 
@@ -48,7 +50,6 @@ Finally push your github-pages.
 
 - Ghost adaptor
 - Jekyll adaptor
-- Hexo adaptor
 - Angular adaptor
 - React adaptor
 - ...
