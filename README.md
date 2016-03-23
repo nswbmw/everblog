@@ -34,6 +34,7 @@ Finally push your github-pages.
 `token` and `noteStoreUrl` get from:
 
 - https://www.evernote.com/api/DeveloperToken.action
+- https://app.yinxiang.com/api/DeveloperToken.action
 
 ### Adaptors
 
