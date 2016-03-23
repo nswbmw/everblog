@@ -77,7 +77,7 @@ function buildBlog() {
   try {
     buildProcessor = require(dir)
   } catch (e) {
-    error(e.stack)
+    error(e.stack || e)
     return Promise.reject()
   }
 
@@ -89,7 +89,7 @@ function buildBlog() {
     
     return yield buildProcessor(data)
   }).catch(e => {
-    error(e.stack)
+    error(e.stack || e)
     return Promise.reject()
   })
 }
@@ -102,7 +102,7 @@ function startBlog() {
     }
     open(distPath)
   }).catch(e => {
-    if (e) error(e.stack)
+    if (e) error(e.stack || e)
   })
 }
 
