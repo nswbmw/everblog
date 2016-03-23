@@ -61,6 +61,10 @@ Finally push your github-pages.
 npm test
 ```
 
+### Error Handling
+
+see [https://dev.evernote.com/doc/articles/error_handling.php](https://dev.evernote.com/doc/articles/error_handling.php).
+
 ### License
 
 MIT
