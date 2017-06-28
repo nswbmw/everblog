@@ -2,6 +2,8 @@
 
 const assert = require('assert')
 const utils = require('../lib/utils')
+const should = require('should')
+const Promise = require('bluebird')
 
 describe('formatNotes', function () {
   it('$blog', function () {
@@ -19,4 +21,12 @@ describe('formatNotes', function () {
 
     assert.deepEqual(utils.formatNotes(_config).$blog, $blog)
   })
+})
+
+describe('blog routines', function(){
+    it('routines', function(){
+        return utils.buildBlog().then(function(){
+        console.log('build blog finished');
+      }).should.not.be.rejected()
+    })
 })

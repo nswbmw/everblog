@@ -5,29 +5,22 @@
 const fs = require('fs')
 const path = require('path')
 
-const co = require('co')
 const home = require('home')()
 const _ = require('lodash')
-const open = require('open')
-const chalk = require('chalk')
-const yaml = require('js-yaml')
 const program = require('commander')
 
 const utils = require('../lib/utils')
 const pkg = require('../package.json')
 const Everblog = require('../lib/everblog')
 
+// Put them in util for easy mocha testing.
+const buildBlog = utils.buildBlog;
+const startBlog = utils.startBlog;
+
+const log = utils.log;
+const error = utils.error;
+
 const configPath = path.join(home, '.everblogrc')
-const log = str => {
-  console.log()
-  console.log('  ' + chalk.green(str).split('\n').join('\n  '))
-  console.log()
-};
-const error = str => {
-  console.log()
-  console.log('  ' + chalk.red(str).split('\n').join('\n  '))
-  console.log()
-};
 
 program
   .version(pkg.version)
@@ -41,7 +34,11 @@ program
 program
   .command('build')
   .description('build blog')
-  .action(buildBlog)
+  .action(function(){
+      buildBlog().then(function(){
+        log('build finished');
+    });
+  })
 
 program
   .command('start')
@@ -56,53 +53,13 @@ if (process.argv.length === 2) {
 
 function configBlog() {
   try {
+    const dir = process.cwd()
+    log(dir)
     log(fs.readFileSync(configPath))
   } catch (e) {
-    log('write to ~/.everblogrc:\n\n  token: "xxx"\n  noteStoreUrl: "xxx"\n  notebook: "xxx"')
+    error('Failed in reading ' + configPath)
+    error('Please you have a ~/.everblogrc:\n\n  token: "xxx"\n  noteStoreUrl: "xxx"\n  notebook: "xxx"')
   }
 }
 
-function buildBlog() {
-  const dir = process.cwd()
-  const configStr = fs.readFileSync(configPath)
-  const config = yaml.safeLoad(configStr)
-
-  if (!config.token || !config.noteStoreUrl || !config.notebook) {
-    error('Configuration is not complete!')
-    log(configStr)
-    return Promise.reject()
-  }
-
-  let buildProcessor
-  try {
-    buildProcessor = require(dir)
-  } catch (e) {
-    error(e.stack || e)
-    return Promise.reject()
-  }
-
-  return co(function* () {
-    const everblog = new Everblog(config)
-    const notes = yield everblog.findNotes()
-    const webApiUrlPrefix = yield everblog.getWebApiUrlPrefix()
-    const data = utils.formatNotes(notes, webApiUrlPrefix)
-    
-    return yield buildProcessor(data)
-  }).catch(e => {
-    error(e.stack || e)
-    return Promise.reject()
-  })
-}
-
-function startBlog() {
-  buildBlog().then(distPath => {
-    distPath = distPath || path.join(process.cwd(), 'index.html')
-    if (!fs.existsSync(distPath)) {
-      return Promise.reject(distPath + ' not exist!')
-    }
-    open(distPath)
-  }).catch(e => {
-    if (e) error(e.stack || e)
-  })
-}
 
