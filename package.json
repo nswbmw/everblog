@@ -21,13 +21,11 @@
     "debug": "^2.2.0",
     "enml2text": "^0.1.1",
     "entities": "^1.1.1",
-    "everblog-adaptor-hexo": "^0.1.0",
     "evernote": "^1.25.82",
     "home": "^1.0.1",
     "js-yaml": "^3.4.6",
     "lodash": "^3.10.1",
-    "open": "0.0.5",
-    "should": "^11.2.1"
+    "open": "0.0.5"
   },
   "author": {
     "name": "nswbmw",
