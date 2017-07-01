@@ -58,7 +58,8 @@ function configBlog() {
   try {
     log(fs.readFileSync(configPath))
   } catch (e) {
-    log('write to ~/.everblogrc:\n\n  token: "xxx"\n  noteStoreUrl: "xxx"\n  notebook: "xxx"')
+    error('Failed in reading ' + configPath)
+    error('Please have ~/.everblogrc including:\n\n  token: "xxx"\n  noteStoreUrl: "xxx"\n  notebook: "xxx"')
   }
 }
 
@@ -83,11 +84,17 @@ function buildBlog() {
 
   return co(function* () {
     const everblog = new Everblog(config)
+    if (everblog._client.noteStoreUrl.indexOf(everblog._client.serviceHost) == -1){
+      throw 'If you are yinxiang user, please specify servicHost in your ~/.everblogrc.'
+    }
     const notes = yield everblog.findNotes()
     const webApiUrlPrefix = yield everblog.getWebApiUrlPrefix()
-    const data = utils.formatNotes(notes, webApiUrlPrefix)
+    var data = utils.formatNotes(notes, webApiUrlPrefix)
+    data.noteStore = everblog._noteStore
     
     return yield buildProcessor(data)
+  }).then(() => {
+    log('build finished')
   }).catch(e => {
     error(e.stack || e)
     return Promise.reject()
