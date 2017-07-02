@@ -85,11 +85,11 @@ function buildBlog() {
   return co(function* () {
     const everblog = new Everblog(config)
     if (everblog._client.noteStoreUrl.indexOf(everblog._client.serviceHost) == -1){
-      throw 'If you are yinxiang user, please specify servicHost in your ~/.everblogrc.'
+      throw new Error('If you are yinxiang user, please specify servicHost in your ~/.everblogrc.')
     }
     const notes = yield everblog.findNotes()
     const webApiUrlPrefix = yield everblog.getWebApiUrlPrefix()
-    var data = utils.formatNotes(notes, webApiUrlPrefix)
+    const data = utils.formatNotes(notes, webApiUrlPrefix)
     data.noteStore = everblog._noteStore
     
     return yield buildProcessor(data)
