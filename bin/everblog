@@ -12,6 +12,8 @@ const open = require('open')
 const chalk = require('chalk')
 const yaml = require('js-yaml')
 const program = require('commander')
+const moment = require('moment')
+const deepcopy = require("deepcopy");
 
 const utils = require('../lib/utils')
 const pkg = require('../package.json')
@@ -74,6 +76,12 @@ function buildBlog() {
     return Promise.reject()
   }
 
+  config.lastBuild = (new Date(config.lastBuild)).getTime()
+  if (!config.lastBuild) {
+    config.lastBuild = 0
+  } 
+
+
   let buildProcessor
   try {
     buildProcessor = require(dir)
@@ -95,6 +103,9 @@ function buildBlog() {
     return yield buildProcessor(data)
   }).then(() => {
     log('build finished')
+    let newConfig = deepcopy(config)
+    newConfig.lastBuild = moment().format('YYYY-MM-DD HH:mm:ss')
+    fs.writeFileSync(configPath, yaml.safeDump(newConfig))
   }).catch(e => {
     error(e.stack || e)
     return Promise.reject()
