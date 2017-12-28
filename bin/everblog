@@ -1,20 +1,14 @@
 #!/usr/bin/env node
 
-'use strict';
- 
 const fs = require('fs')
 const path = require('path')
 
-const co = require('co')
 const home = require('home')()
-const _ = require('lodash')
 const open = require('open')
 const chalk = require('chalk')
 const yaml = require('js-yaml')
 const program = require('commander')
-const moment = require('moment')
 
-const utils = require('../lib/utils')
 const pkg = require('../package.json')
 const Everblog = require('../lib/everblog')
 
@@ -23,12 +17,12 @@ const log = str => {
   console.log()
   console.log('  ' + chalk.green(str).split('\n').join('\n  '))
   console.log()
-};
+}
 const error = str => {
   console.log()
   console.log('  ' + chalk.red(str).split('\n').join('\n  '))
   console.log()
-};
+}
 
 program
   .version(pkg.version)
@@ -37,7 +31,7 @@ program
 program
   .command('config')
   .description('list config')
-  .action(configBlog)
+  .action(showConfig)
 
 program
   .command('build')
@@ -49,77 +43,49 @@ program
   .description('build and start blog')
   .action(startBlog)
 
-program.parse(process.argv);
+program.parse(process.argv)
 
 if (process.argv.length === 2) {
-  program.outputHelp();
+  program.outputHelp()
 }
 
-function configBlog() {
+async function showConfig () {
   try {
     log(fs.readFileSync(configPath))
   } catch (e) {
-    error('Failed in reading ' + configPath)
-    error('Please have ~/.everblogrc including:\n\n  token: "xxx"\n  noteStoreUrl: "xxx"\n  notebook: "xxx"')
+    error(`Failed to read ${configPath}, please create it.`)
   }
 }
 
-function buildBlog() {
-  const dir = process.cwd()
+async function buildBlog () {
+  const pwd = process.cwd()
   const configStr = fs.readFileSync(configPath)
   const config = yaml.safeLoad(configStr)
 
   if (!config.token || !config.noteStoreUrl || !config.notebook) {
-    error('Configuration is not complete!')
-    log(configStr)
-    return Promise.reject()
+    error('~/.everblogrc must include:\n\n  token: "xxx"\n  noteStoreUrl: "xxx"\n  notebook: "xxx"')
+    return
   }
 
-  config.lastBuild = (new Date(config.lastBuild)).getTime()
-  if (!config.lastBuild) {
-    config.lastBuild = 0
-  } 
+  const buildProcessor = require(pwd)
+  const everblog = new Everblog(config)
+  const data = await everblog.findNotes()
+  data.userStore = everblog._userStore
+  data.noteStore = everblog._noteStore
 
+  const distPath = await buildProcessor(data)
+  log('build finished!')
+  return distPath
+}
 
-  let buildProcessor
-  try {
-    buildProcessor = require(dir)
-  } catch (e) {
-    error(e.stack || e)
-    return Promise.reject()
+async function startBlog () {
+  let distPath = await buildBlog()
+  if (!distPath) {
+    return
   }
-
-  return co(function* () {
-    const everblog = new Everblog(config)
-    if (everblog._client.noteStoreUrl.indexOf(everblog._client.serviceHost) == -1){
-      throw new Error('If you are yinxiang user, please specify servicHost in your ~/.everblogrc.')
-    }
-    const notes = yield everblog.findNotes()
-    const webApiUrlPrefix = yield everblog.getWebApiUrlPrefix()
-    const data = utils.formatNotes(notes, webApiUrlPrefix)
-    data.noteStore = everblog._noteStore
-    
-    return yield buildProcessor(data)
-  }).then(() => {
-    log('build finished')
-    let newConfig = _.cloneDeep(config)
-    newConfig.lastBuild = moment().format('YYYY-MM-DD HH:mm:ss')
-    fs.writeFileSync(configPath, yaml.safeDump(newConfig))
-  }).catch(e => {
-    error(e.stack || e)
-    return Promise.reject()
-  })
+  if (!fs.existsSync(distPath)) {
+    error(distPath + ' not exist!')
+    return
+  }
+  open(distPath)
 }
-
-function startBlog() {
-  buildBlog().then(distPath => {
-    distPath = distPath || path.join(process.cwd(), 'index.html')
-    if (!fs.existsSync(distPath)) {
-      return Promise.reject(distPath + ' not exist!')
-    }
-    open(distPath)
-  }).catch(e => {
-    if (e) error(e.stack || e)
-  })
-}
-

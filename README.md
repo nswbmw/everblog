@@ -1,32 +1,43 @@
-## EverBlog
+<h1 align="center">
+EverBlog
+</h1>
 
-[![NPM version][npm-image]][npm-url]
-[![Build status][travis-image]][travis-url]
-[![Dependency Status][david-image]][david-url]
-[![License][license-image]][license-url]
-[![Downloads][downloads-image]][downloads-url]
+<h4 align="center">Write blogs in your evernote.</h4>
 
-EverBlog = write blogs in your evernote.
+<p align="center">
+  <a href="https://npmjs.org/package/everblog"><img src="https://img.shields.io/npm/v/everblog.svg?style=flat-square" alt="NPM version"></a>
+  <a href="https://travis-ci.org/everblogjs/everblog"><img src="https://img.shields.io/travis/everblogjs/everblog.svg?style=flat-square" alt="Build status"></a>
+  <a href="https://david-dm.org/everblogjs/everblog"><img src="http://img.shields.io/david/everblogjs/everblog.svg?style=flat-square" alt="Dependency Status"></a>
+  <a href="LICENSE"><img src="http://img.shields.io/npm/l/everblog.svg?style=flat-square" alt="License"></a>
+  <a href="https://npmjs.org/package/everblog"><img src="http://img.shields.io/npm/dm/everblog.svg?style=flat-square" alt="Downloads"></a>
+</p>
 
 ### How to use
 
-```
+```sh
+1. Install everblog:
+
 $ npm i everblog -g
-$ everblog config
-$ git clone https://github.com/everblogjs/everblog-theme-spa
-$ cd everblog-theme-spa && npm i
+$ vim ~/.everblogrc
 
-Open evernote:
+  token: xxx,
+  noteStoreUrl: xxx,
+  notebook: myblog
 
-1. create a new notebook named `myblog`
-2. create a new note named `_config.yml`
-3. write some notes with tags
+2. Clone theme, like `everblog-theme-spa`:
 
-Then:
+$ git clone https://github.com/everblogjs/everblog-theme-spa myblog
+$ cd myblog && npm i
+
+3. Open evernote:
+
+- create a new notebook named `myblog`
+- create a new note named `_config.yml`, add some configs, like: `title`, `description`
+- create some notes
+
+4. Start everblog:
 
 $ DEBUG=* everblog start
-
-Finally push your github-pages.
 ```
 
 **Tips**: 
@@ -34,48 +45,29 @@ Finally push your github-pages.
 `token` and `noteStoreUrl` get from:
 
 - https://www.evernote.com/api/DeveloperToken.action
-- https://app.yinxiang.com/api/DeveloperToken.action
 
 ### Adaptors
 
-- [everblog-adaptor-hexo](https://github.com/everblogjs/everblog-adaptor-hexo)
 - [everblog-adaptor-spa](https://github.com/everblogjs/everblog-adaptor-spa)
+- [everblog-adaptor-hexo](https://github.com/everblogjs/everblog-adaptor-hexo)
 
 ### Themes
 
-- all hexo themes
 - [everblog-theme-spa](https://github.com/everblogjs/everblog-theme-spa)
-- [everblog-theme-koa](https://github.com/everblogjs/everblog-theme-koa)
+- all hexo themes
 
 ### Roadmap
 
 - Ghost adaptor
 - Jekyll adaptor
-- Angular adaptor
-- React adaptor
 - ...
 
 ### Test
 
+```sh
+$ npm test
 ```
-npm test
-```
-
-### Error Handling
-
-see [https://dev.evernote.com/doc/articles/error_handling.php](https://dev.evernote.com/doc/articles/error_handling.php).
 
 ### License
 
 MIT
-
-[npm-image]: https://img.shields.io/npm/v/everblog.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/everblog
-[travis-image]: https://img.shields.io/travis/everblogjs/everblog.svg?style=flat-square
-[travis-url]: https://travis-ci.org/everblogjs/everblog
-[david-image]: http://img.shields.io/david/everblogjs/everblog.svg?style=flat-square
-[david-url]: https://david-dm.org/everblogjs/everblog
-[license-image]: http://img.shields.io/npm/l/everblog.svg?style=flat-square
-[license-url]: LICENSE
-[downloads-image]: http://img.shields.io/npm/dm/everblog.svg?style=flat-square
-[downloads-url]: https://npmjs.org/package/everblog
