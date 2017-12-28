@@ -27,6 +27,7 @@ const error = str => {
 program
   .version(pkg.version)
   .usage('[command]')
+  .option('-c, --clean', 'clean mode, only effective on rich text')
 
 program
   .command('config')
@@ -48,6 +49,8 @@ program.parse(process.argv)
 if (process.argv.length === 2) {
   program.outputHelp()
 }
+
+const cleanMode = program.clean
 
 async function showConfig () {
   try {
@@ -73,7 +76,7 @@ async function buildBlog () {
   data.userStore = everblog._userStore
   data.noteStore = everblog._noteStore
 
-  const distPath = await buildProcessor(data)
+  const distPath = await buildProcessor(data, cleanMode)
   log('build finished!')
   return distPath
 }

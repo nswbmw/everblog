@@ -46,6 +46,14 @@ $ DEBUG=* everblog start
 
 - https://www.evernote.com/api/DeveloperToken.action
 
+### Clean Mode
+
+```sh
+$ DEBUG=* everblog start --clean
+```
+
+clean mode will remove inline `style`, only effective on evernote rich text.
+
 ### Adaptors
 
 - [everblog-adaptor-spa](https://github.com/everblogjs/everblog-adaptor-spa)
